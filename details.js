@@ -5,15 +5,29 @@ console.log(userIp);
 let data=[];
 
 async function ipDetails(){
-    try{
-        let response=await fetch(`http://ip-api.com/json/${userIp}`);
-        let result=await response.json();
-        console.log(result);
-        renderData(result);
-        pincodeData(result.zip);
-    }catch{
-        alert('Error in Fetching IP Details');
-    }
+    
+   
+    const url = `https://api.ipapi.is/?q=${userIp}`;
+
+try {
+	const response = await fetch(url);
+	const results = await response.text();
+	let result=JSON.parse(results);
+    console.log(result);
+    renderData(result);
+    pincodeData(result.location.zip);
+} catch (error) {
+	console.error(error);
+}
+    // try{
+    //     let response=await fetch(`https://ipinfo.io/${userIp}/geo`);
+    //     let result=await response.json();
+    //     console.log(result);
+    //     renderData(result);
+    //     pincodeData(result.zip);
+    // }catch{
+    //     alert('Error in Fetching IP Details');
+    // }
     
 }
 
@@ -35,41 +49,41 @@ async function pincodeData(pincode){
 
 function renderData(data){
     let ipDetailSpan=document.getElementById('ip-detail');
-    ipDetailSpan.innerText=data.query;
+    ipDetailSpan.innerText=data.ip;
 
     let latitude=document.getElementById('lat');
-    latitude.innerText=data.lat;
+    latitude.innerText=data.location.latitude;
 
     let longitude=document.getElementById('long');
-    longitude.innerText=data.lon;
+    longitude.innerText=data.location.longitude;
 
     let City=document.getElementById('city');
-    City.innerText=data.city;
+    City.innerText=data.location.city;
 
     let Region=document.getElementById('region');
-    Region.innerText=data.region;
+    Region.innerText=data.location.state;
 
     let Organistion=document.getElementById('org');
-    Organistion.innerText=data.org;
+    Organistion.innerText=data.asn.org;
 
     let host=window.location.hostname;
     let hostName=document.getElementById('hostname');
     hostName.innerText=host;
 
-    let datetime_str = new Date().toLocaleString("en-US", { timeZone: `${data.timezone}` });
+    let datetime_str = new Date().toLocaleString("en-US", { timeZone: `${data.location.timezone}` });
     let date_chicago = new Date(datetime_str);
 
     const mapFrameDiv=document.getElementsByClassName('mapFrame')[0];
-    mapFrameDiv.innerHTML=`<iframe src="https://maps.google.com/maps?q=${data.lat}, ${data.lon}&z=15&output=embed"></iframe>`
+    mapFrameDiv.innerHTML=`<iframe src="https://maps.google.com/maps?q=${data.location.latitude}, ${data.location.longitude}&z=15&output=embed"></iframe>`
     
     let timezone=document.getElementById('time');
-    timezone.innerText=data.timezone;
+    timezone.innerText=data.location.timezone;
 
     let dateAndTime=document.getElementById('date');
     dateAndTime.innerText=date_chicago;
 
     let pincode=document.getElementById('pin');
-    pincode.innerText=data.zip;
+    pincode.innerText=data.location.zip;
 }
 
 let neraMeDetailsDiv=document.getElementsByClassName('neraMe-details')[0];
