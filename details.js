@@ -5,22 +5,32 @@ console.log(userIp);
 let data=[];
 
 async function ipDetails(){
-    let response=await fetch(`http://ip-api.com/json/${userIp}`);
-    let result=await response.json();
-    console.log(result);
-    renderData(result);
-    pincodeData(result.zip);
+    try{
+        let response=await fetch(`http://ip-api.com/json/${userIp}`);
+        let result=await response.json();
+        console.log(result);
+        renderData(result);
+        pincodeData(result.zip);
+    }catch{
+        alert('Error in Fetching IP Details');
+    }
+    
 }
 
 ipDetails();
 
 
 async function pincodeData(pincode){
-    let response=await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
-    let result=await response.json();
-    console.log(result);
-    data=result[0].PostOffice;
-    renderPinCodeData(data);
+    try{
+        let response=await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+        let result=await response.json();
+        console.log(result);
+        data=result[0].PostOffice;
+        renderPinCodeData(data);
+    }catch{
+        alert('Error in Fetching PINCODES');
+    }
+    
 }
 
 function renderData(data){

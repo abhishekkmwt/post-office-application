@@ -1,8 +1,13 @@
 async function fetchIp(){
-    let response=await fetch('https://api.ipify.org?format=json');
-    let result=await response.json();
-    localStorage.setItem('ip',JSON.stringify(result.ip));
-    displayIp(result.ip);
+    try{
+        let response=await fetch('https://api.ipify.org?format=json');
+        let result=await response.json();
+        localStorage.setItem('ip',JSON.stringify(result.ip));
+        displayIp(result.ip);
+    }
+    catch{
+        alert('Error in Fetching IP Address');
+    }
 }
 
 fetchIp();
